@@ -74,7 +74,7 @@
                         <label for="loanAmount" class="block text-sm font-medium text-slate-700">Loan Amount in million
                             (Rp)</label>
                         <div class="flex items-center space-x-4 mt-1">
-                            <input type="range" id="loanAmountRange" min="0" max="100000" step="100" value="1000"
+                            <input type="range" id="loanAmountRange" min="0" max="100000" step="10" value="1000"
                                 class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                             <input type="number" id="loanAmount" min="0" max="100000" value="1000"
                                 class="w-28 p-2 border border-slate-300 rounded-md text-sm">
@@ -85,19 +85,20 @@
                         <label for="interestRate" class="block text-sm font-medium text-slate-700">Annual Interest Rate
                             (%)</label>
                         <div class="flex items-center space-x-4 mt-1">
-                            <input type="range" id="interestRateRange" min="0" max="30" step="0.1" value="5"
+                            <input type="range" id="interestRateRange" min="0" max="100" step="0.1" value="5"
                                 class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
-                            <input type="number" id="interestRate" min="0" max="30" step="0.1" value="5"
+                            <input type="number" id="interestRate" min="0" max="100" step="0.1" value="5"
                                 class="w-28 p-2 border border-slate-300 rounded-md text-sm">
                         </div>
                     </div>
 
                     <div>
-                        <label for="loanTerm" class="block text-sm font-medium text-slate-700">Loan Term (Months)</label>
+                        <label for="loanTerm" class="block text-sm font-medium text-slate-700">Loan Term
+                            (Months)</label>
                         <div class="flex items-center space-x-4 mt-1">
-                            <input type="range" id="loanTermRange" min="1" max="6000" step="1" value="60"
+                            <input type="range" id="loanTermRange" min="1" max="360" step="1" value="60"
                                 class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
-                            <input type="number" id="loanTerm" min="1" max="6000" value="60"
+                            <input type="number" id="loanTerm" min="1" max="360" value="60"
                                 class="w-28 p-2 border border-slate-300 rounded-md text-sm">
                         </div>
                     </div>
