@@ -161,20 +161,6 @@
                                 class="w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
                         </div>
                     </div>
-
-                    <div>
-                        <label for="extraPayment" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Extra Monthly Payment (Rp) <span class="text-slate-400 dark:text-slate-500 font-normal">— optional</span></label>
-                        <div class="flex items-center space-x-4 mt-1">
-                            <input type="range" id="extraPaymentRange" min="0" max="5000000" step="100000" value="0"
-                                aria-label="Extra monthly payment slider"
-                                aria-valuemin="0" aria-valuemax="5000000"
-                                class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer">
-                            <input type="number" id="extraPayment" min="0" max="5000000" value="0"
-                                aria-label="Extra monthly payment in Rupiah"
-                                class="w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
-                        </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Additional payment applied to principal each month</p>
-                    </div>
                 </div>
             </div>
 
@@ -192,25 +178,6 @@
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
                         <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Amount Paid</h3>
                         <p id="totalPaid" class="text-2xl font-bold text-slate-800 dark:text-slate-200 mt-1">Rp 0</p>
-                    </div>
-                </div>
-
-                <!-- Savings comparison (only shown when extra payment > 0) -->
-                <div id="savingsComparison" class="hidden bg-green-50 dark:bg-green-900/20 p-5 rounded-2xl border border-green-200 dark:border-green-800">
-                    <h3 class="text-lg font-bold text-green-800 dark:text-green-300 mb-2">💡 Extra Payment Savings</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                        <div>
-                            <span class="text-green-700 dark:text-green-400 font-medium">Interest Saved:</span>
-                            <p id="interestSaved" class="text-lg font-bold text-green-800 dark:text-green-300">Rp 0</p>
-                        </div>
-                        <div>
-                            <span class="text-green-700 dark:text-green-400 font-medium">Months Saved:</span>
-                            <p id="monthsSaved" class="text-lg font-bold text-green-800 dark:text-green-300">0</p>
-                        </div>
-                        <div>
-                            <span class="text-green-700 dark:text-green-400 font-medium">New Payoff Time:</span>
-                            <p id="newPayoffTime" class="text-lg font-bold text-green-800 dark:text-green-300">0 months</p>
-                        </div>
                     </div>
                 </div>
 
@@ -253,7 +220,7 @@
                                     <th scope="col" class="px-4 py-3">Balance</th>
                                     <th scope="col" class="px-4 py-3">Interest</th>
                                     <th scope="col" class="px-4 py-3">Principal</th>
-                                    <th scope="col" class="px-4 py-3">Extra</th>
+                                    <th scope="col" class="px-4 py-3">Total Payment</th>
                                     <th scope="col" class="px-4 py-3">Ending Balance</th>
                                 </tr>
                             </thead>
@@ -279,8 +246,6 @@
         const interestRateRange = document.getElementById('interestRateRange');
         const loanTermInput = document.getElementById('loanTerm');
         const loanTermRange = document.getElementById('loanTermRange');
-        const extraPaymentInput = document.getElementById('extraPayment');
-        const extraPaymentRange = document.getElementById('extraPaymentRange');
 
         const monthlyPaymentEl = document.getElementById('monthlyPayment');
         const totalInterestEl = document.getElementById('totalInterest');
@@ -289,10 +254,6 @@
         const chartCanvas = document.getElementById('amortizationChart');
         const pieCanvas = document.getElementById('pieChart');
         const errorMessageEl = document.getElementById('errorMessage');
-        const savingsComparisonEl = document.getElementById('savingsComparison');
-        const interestSavedEl = document.getElementById('interestSaved');
-        const monthsSavedEl = document.getElementById('monthsSaved');
-        const newPayoffTimeEl = document.getElementById('newPayoffTime');
         const exportCSVBtn = document.getElementById('exportCSV');
         const darkModeToggle = document.getElementById('darkModeToggle');
         const darkModeIcon = document.getElementById('darkModeIcon');
@@ -315,7 +276,6 @@
             const isDark = document.documentElement.classList.contains('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             darkModeIcon.textContent = isDark ? '☀️' : '🌙';
-            // Update chart colors
             updateChartColors();
         });
 
@@ -364,7 +324,6 @@
             const principal = parseFloat(loanAmountInput.value);
             const rate = parseFloat(interestRateInput.value);
             const months = parseInt(loanTermInput.value);
-            const extra = parseFloat(extraPaymentInput.value) || 0;
 
             if (isNaN(principal) || principal <= 0) {
                 showError('⚠️ Loan amount must be greater than 0.');
@@ -386,13 +345,9 @@
                 showError('⚠️ Loan term cannot exceed 360 months (30 years).');
                 return null;
             }
-            if (extra < 0) {
-                showError('⚠️ Extra payment cannot be negative.');
-                return null;
-            }
 
             hideError();
-            return { principal, rate, months, extra };
+            return { principal, rate, months };
         }
 
         // Input event listeners with sync
@@ -402,8 +357,6 @@
         interestRateRange.addEventListener('input', () => syncInputs(interestRateRange, interestRateInput));
         loanTermInput.addEventListener('input', () => syncInputs(loanTermInput, loanTermRange));
         loanTermRange.addEventListener('input', () => syncInputs(loanTermRange, loanTermInput));
-        extraPaymentInput.addEventListener('input', () => syncInputs(extraPaymentInput, extraPaymentRange));
-        extraPaymentRange.addEventListener('input', () => syncInputs(extraPaymentRange, extraPaymentInput));
 
         // ===== DEBOUNCE =====
         function debounce(func, wait) {
@@ -427,39 +380,34 @@
             const inputs = validateInputs();
             if (!inputs) return;
 
-            const { principal, rate, months, extra } = inputs;
+            const { principal, rate, months } = inputs;
             const annualInterestRate = rate / 100;
             const monthlyInterestRate = annualInterestRate / 12;
             const numberOfPayments = months;
 
             const monthlyPayment = calculatePMT(monthlyInterestRate, numberOfPayments, principal);
-            const totalPaidNoExtra = monthlyPayment * numberOfPayments;
-            const totalInterestNoExtra = totalPaidNoExtra - principal;
+            const totalPaid = monthlyPayment * numberOfPayments;
+            const totalInterest = totalPaid - principal;
 
-            // Calculate with extra payments
+            // Update summary
+            monthlyPaymentEl.textContent = formatCurrency(monthlyPayment);
+            totalInterestEl.textContent = formatCurrency(totalInterest);
+            totalPaidEl.textContent = formatCurrency(totalPaid);
+
+            // Build amortization schedule
             let balance = principal;
             let schedule = [];
-            let totalInterestWithExtra = 0;
-            let actualMonths = 0;
 
             const groupSize = months > 120 ? 24 : 12; // Group by 2 years for long loans
             let yearlyData = [];
 
             for (let i = 1; i <= numberOfPayments; i++) {
-                if (balance <= 0) break;
-
                 const interestPaid = balance * monthlyInterestRate;
-                let principalPaid = monthlyPayment - interestPaid;
-                let extraApplied = Math.min(extra, balance - principalPaid);
-                if (extraApplied < 0) extraApplied = 0;
-
-                const totalPrincipalPayment = principalPaid + extraApplied;
-                let endingBalance = balance - totalPrincipalPayment;
+                const principalPaid = monthlyPayment - interestPaid;
+                const totalMonthlyPayment = interestPaid + principalPaid;
+                let endingBalance = balance - principalPaid;
 
                 if (endingBalance < 0.01) {
-                    // Final payment adjustment
-                    principalPaid = balance - interestPaid > 0 ? balance : principalPaid;
-                    extraApplied = 0;
                     endingBalance = 0;
                 }
 
@@ -468,48 +416,25 @@
                     beginningBalance: balance,
                     interestPaid: interestPaid,
                     principalPaid: principalPaid,
-                    extraPayment: extraApplied,
+                    totalPayment: totalMonthlyPayment,
                     endingBalance: endingBalance
                 });
-
-                totalInterestWithExtra += interestPaid;
-                actualMonths = i;
 
                 // Yearly grouping for chart
                 const currentGroupIndex = Math.floor((i - 1) / groupSize);
                 if (!yearlyData[currentGroupIndex]) {
                     yearlyData[currentGroupIndex] = { label: currentGroupIndex + 1, principal: 0, interest: 0 };
                 }
-                yearlyData[currentGroupIndex].principal += principalPaid + extraApplied;
+                yearlyData[currentGroupIndex].principal += principalPaid;
                 yearlyData[currentGroupIndex].interest += interestPaid;
 
                 balance = endingBalance;
-                if (balance <= 0) break;
-            }
-
-            const totalPaidWithExtra = schedule.reduce((sum, p) => sum + p.interestPaid + p.principalPaid + p.extraPayment, 0);
-
-            // Update summary
-            monthlyPaymentEl.textContent = formatCurrency(monthlyPayment + extra);
-            totalInterestEl.textContent = formatCurrency(totalInterestWithExtra);
-            totalPaidEl.textContent = formatCurrency(totalPaidWithExtra);
-
-            // Show savings comparison if extra payment > 0
-            if (extra > 0) {
-                const interestSaved = totalInterestNoExtra - totalInterestWithExtra;
-                const monthsSaved = numberOfPayments - actualMonths;
-                savingsComparisonEl.classList.remove('hidden');
-                interestSavedEl.textContent = formatCurrency(interestSaved);
-                monthsSavedEl.textContent = `${monthsSaved} months`;
-                newPayoffTimeEl.textContent = `${actualMonths} months (${(actualMonths / 12).toFixed(1)} years)`;
-            } else {
-                savingsComparisonEl.classList.add('hidden');
             }
 
             currentSchedule = schedule;
             updateTable(schedule);
             updateChart(yearlyData, groupSize);
-            updatePieChart(principal, totalInterestWithExtra);
+            updatePieChart(principal, totalInterest);
         }
 
         // ===== TABLE UPDATE (using DocumentFragment for performance) =====
@@ -524,7 +449,7 @@
                     <td class="px-4 py-2">${formatCurrency(p.beginningBalance)}</td>
                     <td class="px-4 py-2"><span class="text-red-600 dark:text-red-400 font-medium" title="Interest payment">${formatCurrency(p.interestPaid)}</span></td>
                     <td class="px-4 py-2"><span class="text-green-600 dark:text-green-400 font-medium" title="Principal payment">${formatCurrency(p.principalPaid)}</span></td>
-                    <td class="px-4 py-2"><span class="text-blue-600 dark:text-blue-400 font-medium" title="Extra payment">${formatCurrency(p.extraPayment)}</span></td>
+                    <td class="px-4 py-2"><span class="text-blue-600 dark:text-blue-400 font-bold" title="Total monthly payment">${formatCurrency(p.totalPayment)}</span></td>
                     <td class="px-4 py-2 font-medium">${formatCurrency(p.endingBalance)}</td>
                 `;
                 fragment.appendChild(row);
@@ -569,7 +494,7 @@
                     scales: {
                         x: {
                             stacked: true,
-                            title: { display: true, text: 'Period', color: textColor },
+                            title: { display: true, text: 'Year', color: textColor },
                             ticks: { color: textColor },
                             grid: { color: gridColor }
                         },
@@ -599,7 +524,7 @@
                 }
             });
 
-            // Pie chart
+            // Doughnut chart
             const pieCtx = pieCanvas.getContext('2d');
             pieChart = new Chart(pieCtx, {
                 type: 'doughnut',
@@ -658,13 +583,13 @@
         exportCSVBtn.addEventListener('click', () => {
             if (currentSchedule.length === 0) return;
 
-            const headers = ['Payment #', 'Beginning Balance', 'Interest', 'Principal', 'Extra Payment', 'Ending Balance'];
+            const headers = ['Payment #', 'Beginning Balance', 'Interest', 'Principal', 'Total Payment', 'Ending Balance'];
             const rows = currentSchedule.map(p => [
                 p.paymentNumber,
                 p.beginningBalance.toFixed(2),
                 p.interestPaid.toFixed(2),
                 p.principalPaid.toFixed(2),
-                p.extraPayment.toFixed(2),
+                p.totalPayment.toFixed(2),
                 p.endingBalance.toFixed(2)
             ]);
 
@@ -690,8 +615,8 @@
             initDarkMode();
 
             const inputs = [
-                loanAmountInput, interestRateInput, loanTermInput, extraPaymentInput,
-                loanAmountRange, interestRateRange, loanTermRange, extraPaymentRange
+                loanAmountInput, interestRateInput, loanTermInput,
+                loanAmountRange, interestRateRange, loanTermRange
             ];
 
             const debouncedUpdate = debounce(updateCalculator, 100);
