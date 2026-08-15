@@ -16,8 +16,37 @@
 
     <!-- Favicon (emoji-based data URI) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <link rel="canonical" href="https://amirmuntaha.github.io/loan_calculator/">
 
     <title>Interactive Loan & Amortization Calculator</title>
+
+    <!-- Structured Data for SEO (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Loan Amortization Calculator",
+        "url": "https://amirmuntaha.github.io/loan_calculator/",
+        "description": "Interactive loan amortization calculator with visual charts, detailed payment schedules, and CSV export.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "author": {
+            "@type": "Person",
+            "name": "Amir Muntaha",
+            "url": "https://github.com/amirmuntaha"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "IDR"
+        },
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "softwareVersion": "2.0"
+    }
+    </script>
+
+    <!-- Google AdSense - Replace ca-pub-XXXXXXXXXXXXXXXX with your actual AdSense Publisher ID -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
     <!-- Google Fonts - must be before Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,6 +142,24 @@
                 your payments, total interest, and payback schedule.</p>
         </header>
 
+        <!-- ====== AD SLOT #1: Header Banner (728x90 or Responsive) ====== -->
+        <!-- Place your AdSense horizontal banner ad here -->
+        <div class="ad-slot no-print mb-6 text-center">
+            <div class="mx-auto max-w-3xl bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-slate-400 dark:text-slate-500 text-sm">
+                <!-- Replace this placeholder with your AdSense ad unit code -->
+                <!-- Example:
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXX"
+                     data-ad-format="horizontal"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                -->
+                📢 Ad Space — Header Banner (728×90 or Responsive)
+            </div>
+        </div>
+
         <!-- Error message area -->
         <div id="errorMessage" role="alert" aria-live="assertive" class="hidden mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-400 text-center font-medium"></div>
 
@@ -190,6 +237,24 @@
                     </div>
                 </div>
 
+                <!-- ====== AD SLOT #2: In-Feed / Native Ad (Between Charts) ====== -->
+                <!-- Place your AdSense in-feed or native ad here -->
+                <div class="ad-slot no-print">
+                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-center text-slate-400 dark:text-slate-500 text-sm">
+                        <!-- Replace this placeholder with your AdSense ad unit code -->
+                        <!-- Example:
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"
+                             data-ad-format="fluid"
+                             data-ad-layout-key="-fb+5w+4e-db+86"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                        -->
+                        📢 Ad Space — In-Feed Native Ad (Responsive)
+                    </div>
+                </div>
+
                 <!-- Bar chart -->
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
                     <h2 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">Principal vs. Interest by Year</h2>
@@ -229,10 +294,48 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- ====== AD SLOT #3: Rectangle Ad (After Table) ====== -->
+                <!-- Place your AdSense rectangle ad here -->
+                <div class="ad-slot no-print">
+                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-center text-slate-400 dark:text-slate-500 text-sm">
+                        <!-- Replace this placeholder with your AdSense ad unit code -->
+                        <!-- Example:
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"
+                             data-ad-format="rectangle"
+                             data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                        -->
+                        📢 Ad Space — Rectangle (300×250 or Responsive)
+                    </div>
+                </div>
             </div>
         </div>
 
-        <footer class="text-center mt-12 text-sm text-slate-500 dark:text-slate-400">
+        <!-- ====== AD SLOT #4: Sticky Footer Ad ====== -->
+        <!-- This ad stays fixed at the bottom of the viewport -->
+        <div id="stickyFooterAd" class="ad-slot no-print fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
+            <div class="container mx-auto px-4 py-2 text-center relative">
+                <button id="closeFooterAd" aria-label="Close footer ad" class="absolute top-1 right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg font-bold">&times;</button>
+                <div class="text-slate-400 dark:text-slate-500 text-sm py-1">
+                    <!-- Replace this placeholder with your AdSense anchor/sticky ad unit code -->
+                    <!-- Example:
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                         data-ad-slot="XXXXXXXXXX"
+                         data-ad-format="anchor"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    -->
+                    📢 Ad Space — Sticky Footer (Anchor Ad)
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-12 mb-16 text-sm text-slate-500 dark:text-slate-400">
             <p>Built with ❤️ — <a href="https://github.com/amirmuntaha/loan_calculator" class="underline hover:text-blue-600 dark:hover:text-blue-400">View on GitHub</a></p>
             <p class="mt-1 text-xs">Note: This uses Tailwind CSS CDN for prototyping. For production, use the <a href="https://tailwindcss.com/docs/installation" class="underline">Tailwind CLI</a> to generate optimized CSS.</p>
         </footer>
@@ -624,6 +727,16 @@
 
             initializeCharts();
             updateCalculator();
+
+            // Sticky footer ad close button
+            const closeFooterAd = document.getElementById('closeFooterAd');
+            const stickyFooterAd = document.getElementById('stickyFooterAd');
+            if (closeFooterAd && stickyFooterAd) {
+                closeFooterAd.addEventListener('click', () => {
+                    stickyFooterAd.style.display = 'none';
+                    document.body.style.paddingBottom = '0';
+                });
+            }
         });
     </script>
 </body>

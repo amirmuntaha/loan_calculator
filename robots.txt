@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amirmuntaha.github.io/loan_calculator/sitemap.xml
