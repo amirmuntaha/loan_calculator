@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="id" class="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Interactive Loan Amortization Calculator - Simulate and predict loan payments based on yearly interest rates with visual charts and detailed schedules.">
-    <meta name="keywords" content="loan calculator, amortization, interest rate, monthly payment, loan schedule">
+    <meta name="keywords" content="loan calculator, amortization, interest rate, monthly payment, loan schedule, kalkulator pinjaman">
     <meta name="author" content="Amir Muntaha">
     <meta name="google-site-verification" content="MjggPwAFO_3msVSQtmXogyfFJ9tqHHUveaqNxzdXCjE" />
 
     <!-- Open Graph Tags -->
-    <meta property="og:title" content="Loan Amortization Calculator">
-    <meta property="og:description" content="Interactively explore how changing your loan terms affects your payments, total interest, and payback schedule.">
+    <meta property="og:title" content="Kalkulator Amortisasi Pinjaman">
+    <meta property="og:description" content="Jelajahi secara interaktif bagaimana perubahan ketentuan pinjaman memengaruhi pembayaran, total bunga, dan jadwal pelunasan Anda.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://amirmuntaha.github.io/loan_calculator/">
 
@@ -19,7 +19,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
     <link rel="canonical" href="https://amirmuntaha.github.io/loan_calculator/">
 
-    <title>Interactive Loan & Amortization Calculator</title>
+    <title>Kalkulator Pinjaman & Amortisasi Interaktif</title>
 
     <!-- Structured Data for SEO (Schema.org JSON-LD) -->
     <script type="application/ld+json">
@@ -42,7 +42,7 @@
             "priceCurrency": "IDR"
         },
         "browserRequirements": "Requires JavaScript. Requires HTML5.",
-        "softwareVersion": "2.0"
+        "softwareVersion": "3.0"
     }
     </script>
 
@@ -83,29 +83,30 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            height: 350px;
-            max-height: 40vh;
+            height: 300px;
+            max-height: 35vh;
         }
 
         @media (min-width: 768px) {
             .chart-container {
                 height: 400px;
+                max-height: 40vh;
             }
         }
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             background: #2563eb;
             border-radius: 50%;
             cursor: pointer;
         }
 
         input[type=range]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             background: #2563eb;
             border-radius: 50%;
             cursor: pointer;
@@ -119,6 +120,67 @@
             background: #60a5fa;
         }
 
+        /* Language toggle styles */
+        .lang-toggle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            padding: 3px;
+            cursor: pointer;
+        }
+
+        .dark .lang-toggle {
+            background: #334155;
+        }
+
+        .lang-toggle-option {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            user-select: none;
+            color: #64748b;
+        }
+
+        .lang-toggle-option.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark .lang-toggle-option {
+            color: #94a3b8;
+        }
+
+        .dark .lang-toggle-option.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Mobile-specific improvements */
+        @media (max-width: 640px) {
+            .summary-card-value {
+                font-size: 1.25rem !important;
+            }
+
+            .mobile-stack {
+                flex-direction: column;
+            }
+
+            .table-scroll {
+                font-size: 0.7rem;
+            }
+
+            .table-scroll th,
+            .table-scroll td {
+                padding: 0.4rem 0.5rem;
+                white-space: nowrap;
+            }
+        }
+
         /* Print styles */
         @media print {
             .no-print { display: none !important; }
@@ -130,165 +192,149 @@
 
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-3 sm:p-4 md:p-8 max-w-7xl">
 
-        <header class="text-center mb-8">
-            <div class="flex justify-end mb-4 no-print">
+        <header class="text-center mb-6 md:mb-8">
+            <div class="flex justify-between items-center mb-4 no-print">
+                <!-- Language Toggle -->
+                <div class="lang-toggle" id="langToggle" role="radiogroup" aria-label="Language selector">
+                    <span class="lang-toggle-option active" data-lang="id" role="radio" aria-checked="true" tabindex="0">ID</span>
+                    <span class="lang-toggle-option" data-lang="en" role="radio" aria-checked="false" tabindex="0">EN</span>
+                </div>
+                <!-- Dark Mode Toggle -->
                 <button id="darkModeToggle" aria-label="Toggle dark mode"
                     class="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
                     <span id="darkModeIcon" class="text-xl">🌙</span>
                 </button>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Loan Amortization Calculator</h1>
-            <p class="mt-2 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Interactively explore how changing your loan terms affects
-                your payments, total interest, and payback schedule.</p>
+            <h1 id="pageTitle" class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Kalkulator Amortisasi Pinjaman</h1>
+            <p id="pageSubtitle" class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Jelajahi secara interaktif bagaimana perubahan ketentuan pinjaman memengaruhi pembayaran, total bunga, dan jadwal pelunasan Anda.</p>
         </header>
 
         <!-- ====== AD SLOT #1: Header Banner (728x90 or Responsive) ====== -->
-        <!-- Place your AdSense horizontal banner ad here -->
-        <div class="ad-slot no-print mb-6 text-center">
-            <div class="mx-auto max-w-3xl bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-slate-400 dark:text-slate-500 text-sm">
-                <!-- Replace this placeholder with your AdSense ad unit code -->
-                <!-- Example:
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                     data-ad-slot="XXXXXXXXXX"
-                     data-ad-format="horizontal"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                -->
+        <div class="ad-slot no-print mb-4 md:mb-6 text-center">
+            <div class="mx-auto max-w-3xl bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 md:p-4 text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
                 📢 Ad Space — Header Banner (728×90 or Responsive)
             </div>
         </div>
 
         <!-- Error message area -->
-        <div id="errorMessage" role="alert" aria-live="assertive" class="hidden mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-400 text-center font-medium"></div>
+        <div id="errorMessage" role="alert" aria-live="assertive" class="hidden mb-4 md:mb-6 p-3 md:p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-400 text-center text-sm font-medium"></div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
 
-            <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                <h2 class="text-xl font-bold mb-6 text-slate-900 dark:text-white">Loan Parameters</h2>
+            <!-- Loan Parameters Panel -->
+            <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+                <h2 id="paramTitle" class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-slate-900 dark:text-white">Parameter Pinjaman</h2>
 
-                <div class="space-y-6">
+                <div class="space-y-5 md:space-y-6">
                     <div>
-                        <label for="loanAmount" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Loan Amount (Rp)</label>
-                        <div class="flex items-center space-x-4 mt-1">
+                        <label for="loanAmount" id="labelLoanAmount" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Jumlah Pinjaman (Rp)</label>
+                        <div class="flex items-center space-x-3 md:space-x-4 mt-1">
                             <input type="range" id="loanAmountRange" min="1" max="10000000000" step="1000000" value="500000000"
                                 aria-label="Loan amount slider"
                                 aria-valuemin="1" aria-valuemax="10000000000"
                                 class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer">
                             <input type="number" id="loanAmount" min="1" max="10000000000" value="500000000"
                                 aria-label="Loan amount in Rupiah"
-                                class="w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
+                                class="w-28 sm:w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
                         </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Enter the full amount (e.g., 500000000 for Rp 500 juta)</p>
+                        <p id="loanAmountHint" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Masukkan jumlah penuh (cth: 500000000 untuk Rp 500 juta)</p>
                     </div>
 
                     <div>
-                        <label for="interestRate" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Annual Interest Rate (%)</label>
-                        <div class="flex items-center space-x-4 mt-1">
+                        <label for="interestRate" id="labelInterestRate" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Suku Bunga Tahunan (%)</label>
+                        <div class="flex items-center space-x-3 md:space-x-4 mt-1">
                             <input type="range" id="interestRateRange" min="0.1" max="30" step="0.1" value="5"
                                 aria-label="Annual interest rate slider"
                                 aria-valuemin="0.1" aria-valuemax="30"
                                 class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer">
                             <input type="number" id="interestRate" min="0.1" max="30" step="0.1" value="5"
                                 aria-label="Annual interest rate percentage"
-                                class="w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
+                                class="w-28 sm:w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
                         </div>
                     </div>
 
                     <div>
-                        <label for="loanTerm" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Loan Term (Months)</label>
-                        <div class="flex items-center space-x-4 mt-1">
+                        <label for="loanTerm" id="labelLoanTerm" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Jangka Waktu (Bulan)</label>
+                        <div class="flex items-center space-x-3 md:space-x-4 mt-1">
                             <input type="range" id="loanTermRange" min="1" max="360" step="1" value="60"
                                 aria-label="Loan term slider in months"
                                 aria-valuemin="1" aria-valuemax="360"
                                 class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer">
                             <input type="number" id="loanTerm" min="1" max="360" value="60"
                                 aria-label="Loan term in months"
-                                class="w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
+                                class="w-28 sm:w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-2 space-y-8">
-                <!-- Summary cards with aria-live for screen readers -->
-                <div aria-live="polite" aria-atomic="true" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Payment</h3>
-                        <p id="monthlyPayment" class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">Rp 0</p>
+            <!-- Results Panel -->
+            <div class="lg:col-span-2 space-y-4 md:space-y-8">
+                <!-- Summary cards -->
+                <div aria-live="polite" aria-atomic="true" class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
+                        <h3 id="labelMonthlyPayment" class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Angsuran Bulanan</h3>
+                        <p id="monthlyPayment" class="summary-card-value text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">Rp 0</p>
                     </div>
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Interest Paid</h3>
-                        <p id="totalInterest" class="text-2xl font-bold text-slate-800 dark:text-slate-200 mt-1">Rp 0</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
+                        <h3 id="labelTotalInterest" class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Total Bunga Dibayar</h3>
+                        <p id="totalInterest" class="summary-card-value text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-200 mt-1">Rp 0</p>
                     </div>
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Amount Paid</h3>
-                        <p id="totalPaid" class="text-2xl font-bold text-slate-800 dark:text-slate-200 mt-1">Rp 0</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-2xl shadow-lg text-center border border-slate-200 dark:border-slate-700">
+                        <h3 id="labelTotalPaid" class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Total Pembayaran</h3>
+                        <p id="totalPaid" class="summary-card-value text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-200 mt-1">Rp 0</p>
                     </div>
                 </div>
 
-                <!-- Pie chart for total split -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">Total Payment Breakdown</h2>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Visual split of your total payments into principal (loan amount) and interest.</p>
-                    <div class="chart-container" style="height: 250px; max-height: 30vh;">
+                <!-- Pie chart -->
+                <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h2 id="pieChartTitle" class="text-lg md:text-xl font-bold mb-2 md:mb-4 text-slate-900 dark:text-white">Rincian Total Pembayaran</h2>
+                    <p id="pieChartDesc" class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-3 md:mb-4">Pembagian visual dari total pembayaran Anda menjadi pokok (jumlah pinjaman) dan bunga.</p>
+                    <div class="chart-container" style="height: 220px; max-height: 28vh;">
                         <canvas id="pieChart" aria-label="Pie chart showing principal vs interest breakdown"></canvas>
                     </div>
                 </div>
 
-                <!-- ====== AD SLOT #2: In-Feed / Native Ad (Between Charts) ====== -->
-                <!-- Place your AdSense in-feed or native ad here -->
+                <!-- AD SLOT #2 -->
                 <div class="ad-slot no-print">
-                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-center text-slate-400 dark:text-slate-500 text-sm">
-                        <!-- Replace this placeholder with your AdSense ad unit code -->
-                        <!-- Example:
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                             data-ad-slot="XXXXXXXXXX"
-                             data-ad-format="fluid"
-                             data-ad-layout-key="-fb+5w+4e-db+86"></ins>
-                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                        -->
+                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 md:p-4 text-center text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
                         📢 Ad Space — In-Feed Native Ad (Responsive)
                     </div>
                 </div>
 
                 <!-- Bar chart -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">Principal vs. Interest by Year</h2>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">This chart shows principal and interest
-                        paid each year. Notice how interest decreases over time as more goes toward principal.</p>
+                <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h2 id="barChartTitle" class="text-lg md:text-xl font-bold mb-2 md:mb-4 text-slate-900 dark:text-white">Pokok vs. Bunga per Tahun</h2>
+                    <p id="barChartDesc" class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-3 md:mb-4">Grafik ini menampilkan pokok dan bunga yang dibayarkan setiap tahun. Perhatikan bagaimana bunga berkurang seiring waktu.</p>
                     <div class="chart-container">
                         <canvas id="amortizationChart" aria-label="Stacked bar chart showing yearly principal and interest payments"></canvas>
                     </div>
                 </div>
 
-                <!-- Amortization table with export -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <!-- Amortization table -->
+                <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 md:mb-4 gap-2">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Amortization Schedule</h2>
-                            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Detailed payment-by-payment breakdown showing how each payment affects your loan balance.</p>
+                            <h2 id="tableTitle" class="text-lg md:text-xl font-bold text-slate-900 dark:text-white">Jadwal Amortisasi</h2>
+                            <p id="tableDesc" class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Rincian pembayaran per bulan menunjukkan bagaimana setiap pembayaran memengaruhi saldo pinjaman Anda.</p>
                         </div>
                         <button id="exportCSV" aria-label="Export amortization schedule as CSV"
-                            class="no-print mt-3 sm:mt-0 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors">
-                            📥 Export CSV
+                            class="no-print inline-flex items-center justify-center px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors whitespace-nowrap">
+                            📥 <span id="exportLabel">Ekspor CSV</span>
                         </button>
                     </div>
-                    <div class="h-96 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-lg">
-                        <table class="w-full text-sm text-left text-slate-500 dark:text-slate-400" aria-label="Amortization schedule table">
+                    <div class="h-72 sm:h-96 overflow-auto border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <table class="table-scroll w-full text-xs sm:text-sm text-left text-slate-500 dark:text-slate-400" aria-label="Amortization schedule table">
                             <thead class="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-100 dark:bg-slate-700 sticky top-0">
                                 <tr>
-                                    <th scope="col" class="px-4 py-3">#</th>
-                                    <th scope="col" class="px-4 py-3">Balance</th>
-                                    <th scope="col" class="px-4 py-3">Interest</th>
-                                    <th scope="col" class="px-4 py-3">Principal</th>
-                                    <th scope="col" class="px-4 py-3">Total Payment</th>
-                                    <th scope="col" class="px-4 py-3">Ending Balance</th>
+                                    <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3">#</th>
+                                    <th scope="col" id="thBalance" class="px-2 sm:px-4 py-2 sm:py-3">Saldo</th>
+                                    <th scope="col" id="thInterest" class="px-2 sm:px-4 py-2 sm:py-3">Bunga</th>
+                                    <th scope="col" id="thPrincipal" class="px-2 sm:px-4 py-2 sm:py-3">Pokok</th>
+                                    <th scope="col" id="thTotalPayment" class="px-2 sm:px-4 py-2 sm:py-3">Total</th>
+                                    <th scope="col" id="thEndingBalance" class="px-2 sm:px-4 py-2 sm:py-3">Sisa Saldo</th>
                                 </tr>
                             </thead>
                             <tbody id="amortizationTableBody" class="divide-y divide-slate-200 dark:divide-slate-700">
@@ -297,53 +343,176 @@
                     </div>
                 </div>
 
-                <!-- ====== AD SLOT #3: Rectangle Ad (After Table) ====== -->
-                <!-- Place your AdSense rectangle ad here -->
+                <!-- AD SLOT #3 -->
                 <div class="ad-slot no-print">
-                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-center text-slate-400 dark:text-slate-500 text-sm">
-                        <!-- Replace this placeholder with your AdSense ad unit code -->
-                        <!-- Example:
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                             data-ad-slot="XXXXXXXXXX"
-                             data-ad-format="rectangle"
-                             data-full-width-responsive="true"></ins>
-                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                        -->
+                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 md:p-4 text-center text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
                         📢 Ad Space — Rectangle (300×250 or Responsive)
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ====== AD SLOT #4: Sticky Footer Ad ====== -->
-        <!-- This ad stays fixed at the bottom of the viewport -->
+        <!-- AD SLOT #4: Sticky Footer -->
         <div id="stickyFooterAd" class="ad-slot no-print fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
-            <div class="container mx-auto px-4 py-2 text-center relative">
+            <div class="container mx-auto px-3 md:px-4 py-2 text-center relative">
                 <button id="closeFooterAd" aria-label="Close footer ad" class="absolute top-1 right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg font-bold">&times;</button>
-                <div class="text-slate-400 dark:text-slate-500 text-sm py-1">
-                    <!-- Replace this placeholder with your AdSense anchor/sticky ad unit code -->
-                    <!-- Example:
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                         data-ad-slot="XXXXXXXXXX"
-                         data-ad-format="anchor"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                    -->
+                <div class="text-slate-400 dark:text-slate-500 text-xs sm:text-sm py-1">
                     📢 Ad Space — Sticky Footer (Anchor Ad)
                 </div>
             </div>
         </div>
 
-        <footer class="text-center mt-12 mb-16 text-sm text-slate-500 dark:text-slate-400">
+        <footer class="text-center mt-10 md:mt-12 mb-16 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
             <p>Built with ❤️ — <a href="https://github.com/amirmuntaha/loan_calculator" class="underline hover:text-blue-600 dark:hover:text-blue-400">View on GitHub</a></p>
             <p class="mt-1 text-xs">Note: This uses Tailwind CSS CDN for prototyping. For production, use the <a href="https://tailwindcss.com/docs/installation" class="underline">Tailwind CLI</a> to generate optimized CSS.</p>
         </footer>
     </div>
 
     <script>
+        // ===== INTERNATIONALIZATION (i18n) =====
+        const translations = {
+            id: {
+                pageTitle: 'Kalkulator Amortisasi Pinjaman',
+                pageSubtitle: 'Jelajahi secara interaktif bagaimana perubahan ketentuan pinjaman memengaruhi pembayaran, total bunga, dan jadwal pelunasan Anda.',
+                paramTitle: 'Parameter Pinjaman',
+                labelLoanAmount: 'Jumlah Pinjaman (Rp)',
+                loanAmountHint: 'Masukkan jumlah penuh (cth: 500000000 untuk Rp 500 juta)',
+                labelInterestRate: 'Suku Bunga Tahunan (%)',
+                labelLoanTerm: 'Jangka Waktu (Bulan)',
+                labelMonthlyPayment: 'Angsuran Bulanan',
+                labelTotalInterest: 'Total Bunga Dibayar',
+                labelTotalPaid: 'Total Pembayaran',
+                pieChartTitle: 'Rincian Total Pembayaran',
+                pieChartDesc: 'Pembagian visual dari total pembayaran Anda menjadi pokok (jumlah pinjaman) dan bunga.',
+                barChartTitle: 'Pokok vs. Bunga per Tahun',
+                barChartDesc: 'Grafik ini menampilkan pokok dan bunga yang dibayarkan setiap tahun. Perhatikan bagaimana bunga berkurang seiring waktu.',
+                tableTitle: 'Jadwal Amortisasi',
+                tableDesc: 'Rincian pembayaran per bulan menunjukkan bagaimana setiap pembayaran memengaruhi saldo pinjaman Anda.',
+                exportLabel: 'Ekspor CSV',
+                thBalance: 'Saldo',
+                thInterest: 'Bunga',
+                thPrincipal: 'Pokok',
+                thTotalPayment: 'Total',
+                thEndingBalance: 'Sisa Saldo',
+                chartPrincipal: 'Pokok',
+                chartInterest: 'Bunga',
+                chartYear: 'Tahun',
+                chartPeriod: 'Periode (2 Tahun)',
+                chartAmountPaid: 'Jumlah Dibayarkan (Rp)',
+                errorAmountZero: '⚠️ Jumlah pinjaman harus lebih dari 0.',
+                errorRateNegative: '⚠️ Suku bunga tidak boleh negatif.',
+                errorRateHigh: '⚠️ Suku bunga terlalu tinggi (maks 30%). Silakan periksa.',
+                errorTermZero: '⚠️ Jangka waktu minimal 1 bulan.',
+                errorTermHigh: '⚠️ Jangka waktu tidak boleh lebih dari 360 bulan (30 tahun).'
+            },
+            en: {
+                pageTitle: 'Loan Amortization Calculator',
+                pageSubtitle: 'Interactively explore how changing your loan terms affects your payments, total interest, and payback schedule.',
+                paramTitle: 'Loan Parameters',
+                labelLoanAmount: 'Loan Amount (Rp)',
+                loanAmountHint: 'Enter the full amount (e.g., 500000000 for Rp 500 million)',
+                labelInterestRate: 'Annual Interest Rate (%)',
+                labelLoanTerm: 'Loan Term (Months)',
+                labelMonthlyPayment: 'Monthly Payment',
+                labelTotalInterest: 'Total Interest Paid',
+                labelTotalPaid: 'Total Amount Paid',
+                pieChartTitle: 'Total Payment Breakdown',
+                pieChartDesc: 'Visual split of your total payments into principal (loan amount) and interest.',
+                barChartTitle: 'Principal vs. Interest by Year',
+                barChartDesc: 'This chart shows principal and interest paid each year. Notice how interest decreases over time as more goes toward principal.',
+                tableTitle: 'Amortization Schedule',
+                tableDesc: 'Detailed payment-by-payment breakdown showing how each payment affects your loan balance.',
+                exportLabel: 'Export CSV',
+                thBalance: 'Balance',
+                thInterest: 'Interest',
+                thPrincipal: 'Principal',
+                thTotalPayment: 'Total Payment',
+                thEndingBalance: 'Ending Balance',
+                chartPrincipal: 'Principal',
+                chartInterest: 'Interest',
+                chartYear: 'Year',
+                chartPeriod: 'Period (2 Years)',
+                chartAmountPaid: 'Amount Paid (Rp)',
+                errorAmountZero: '⚠️ Loan amount must be greater than 0.',
+                errorRateNegative: '⚠️ Interest rate cannot be negative.',
+                errorRateHigh: '⚠️ Interest rate seems unusually high (max 30%). Please verify.',
+                errorTermZero: '⚠️ Loan term must be at least 1 month.',
+                errorTermHigh: '⚠️ Loan term cannot exceed 360 months (30 years).'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'id';
+
+        function t(key) {
+            return translations[currentLang][key] || translations['id'][key] || key;
+        }
+
+        function applyTranslations() {
+            // Update HTML lang attribute
+            document.documentElement.lang = currentLang;
+
+            // Header
+            document.getElementById('pageTitle').textContent = t('pageTitle');
+            document.getElementById('pageSubtitle').textContent = t('pageSubtitle');
+
+            // Parameters
+            document.getElementById('paramTitle').textContent = t('paramTitle');
+            document.getElementById('labelLoanAmount').textContent = t('labelLoanAmount');
+            document.getElementById('loanAmountHint').textContent = t('loanAmountHint');
+            document.getElementById('labelInterestRate').textContent = t('labelInterestRate');
+            document.getElementById('labelLoanTerm').textContent = t('labelLoanTerm');
+
+            // Summary cards
+            document.getElementById('labelMonthlyPayment').textContent = t('labelMonthlyPayment');
+            document.getElementById('labelTotalInterest').textContent = t('labelTotalInterest');
+            document.getElementById('labelTotalPaid').textContent = t('labelTotalPaid');
+
+            // Charts
+            document.getElementById('pieChartTitle').textContent = t('pieChartTitle');
+            document.getElementById('pieChartDesc').textContent = t('pieChartDesc');
+            document.getElementById('barChartTitle').textContent = t('barChartTitle');
+            document.getElementById('barChartDesc').textContent = t('barChartDesc');
+
+            // Table
+            document.getElementById('tableTitle').textContent = t('tableTitle');
+            document.getElementById('tableDesc').textContent = t('tableDesc');
+            document.getElementById('exportLabel').textContent = t('exportLabel');
+            document.getElementById('thBalance').textContent = t('thBalance');
+            document.getElementById('thInterest').textContent = t('thInterest');
+            document.getElementById('thPrincipal').textContent = t('thPrincipal');
+            document.getElementById('thTotalPayment').textContent = t('thTotalPayment');
+            document.getElementById('thEndingBalance').textContent = t('thEndingBalance');
+
+            // Update chart labels
+            if (amortizationChart) {
+                amortizationChart.data.datasets[0].label = t('chartPrincipal');
+                amortizationChart.data.datasets[1].label = t('chartInterest');
+                amortizationChart.options.scales.y.title.text = t('chartAmountPaid');
+                amortizationChart.update();
+            }
+            if (pieChart) {
+                pieChart.data.labels = [t('chartPrincipal'), t('chartInterest')];
+                pieChart.update();
+            }
+
+            // Update page title
+            document.title = currentLang === 'id' ? 'Kalkulator Pinjaman & Amortisasi Interaktif' : 'Interactive Loan & Amortization Calculator';
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+
+            // Update toggle UI
+            document.querySelectorAll('.lang-toggle-option').forEach(el => {
+                const isActive = el.dataset.lang === lang;
+                el.classList.toggle('active', isActive);
+                el.setAttribute('aria-checked', isActive);
+            });
+
+            applyTranslations();
+        }
+
         // ===== DOM ELEMENTS =====
         const loanAmountInput = document.getElementById('loanAmount');
         const loanAmountRange = document.getElementById('loanAmountRange');
@@ -431,23 +600,23 @@
             const months = parseInt(loanTermInput.value);
 
             if (isNaN(principal) || principal <= 0) {
-                showError('⚠️ Loan amount must be greater than 0.');
+                showError(t('errorAmountZero'));
                 return null;
             }
             if (isNaN(rate) || rate < 0) {
-                showError('⚠️ Interest rate cannot be negative.');
+                showError(t('errorRateNegative'));
                 return null;
             }
             if (rate > 30) {
-                showError('⚠️ Interest rate seems unusually high (max 30%). Please verify.');
+                showError(t('errorRateHigh'));
                 return null;
             }
             if (isNaN(months) || months <= 0) {
-                showError('⚠️ Loan term must be at least 1 month.');
+                showError(t('errorTermZero'));
                 return null;
             }
             if (months > 360) {
-                showError('⚠️ Loan term cannot exceed 360 months (30 years).');
+                showError(t('errorTermHigh'));
                 return null;
             }
 
@@ -503,7 +672,7 @@
             let balance = principal;
             let schedule = [];
 
-            const groupSize = months > 120 ? 24 : 12; // Group by 2 years for long loans
+            const groupSize = months > 120 ? 24 : 12;
             let yearlyData = [];
 
             for (let i = 1; i <= numberOfPayments; i++) {
@@ -542,7 +711,7 @@
             updatePieChart(principal, totalInterest);
         }
 
-        // ===== TABLE UPDATE (using DocumentFragment for performance) =====
+        // ===== TABLE UPDATE =====
         function updateTable(schedule) {
             const fragment = document.createDocumentFragment();
 
@@ -550,12 +719,12 @@
                 const row = document.createElement('tr');
                 row.className = 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700';
                 row.innerHTML = `
-                    <td class="px-4 py-2 font-medium text-slate-900 dark:text-slate-100">${p.paymentNumber}</td>
-                    <td class="px-4 py-2">${formatCurrency(p.beginningBalance)}</td>
-                    <td class="px-4 py-2"><span class="text-red-600 dark:text-red-400 font-medium" title="Interest payment">${formatCurrency(p.interestPaid)}</span></td>
-                    <td class="px-4 py-2"><span class="text-green-600 dark:text-green-400 font-medium" title="Principal payment">${formatCurrency(p.principalPaid)}</span></td>
-                    <td class="px-4 py-2"><span class="text-blue-600 dark:text-blue-400 font-bold" title="Total monthly payment">${formatCurrency(p.totalPayment)}</span></td>
-                    <td class="px-4 py-2 font-medium">${formatCurrency(p.endingBalance)}</td>
+                    <td class="px-2 sm:px-4 py-1.5 sm:py-2 font-medium text-slate-900 dark:text-slate-100">${p.paymentNumber}</td>
+                    <td class="px-2 sm:px-4 py-1.5 sm:py-2">${formatCurrency(p.beginningBalance)}</td>
+                    <td class="px-2 sm:px-4 py-1.5 sm:py-2"><span class="text-red-600 dark:text-red-400 font-medium">${formatCurrency(p.interestPaid)}</span></td>
+                    <td class="px-2 sm:px-4 py-1.5 sm:py-2"><span class="text-green-600 dark:text-green-400 font-medium">${formatCurrency(p.principalPaid)}</span></td>
+                    <td class="px-2 sm:px-4 py-1.5 sm:py-2"><span class="text-blue-600 dark:text-blue-400 font-bold">${formatCurrency(p.totalPayment)}</span></td>
+                    <td class="px-2 sm:px-4 py-1.5 sm:py-2 font-medium">${formatCurrency(p.endingBalance)}</td>
                 `;
                 fragment.appendChild(row);
             });
@@ -578,14 +747,14 @@
                     labels: [],
                     datasets: [
                         {
-                            label: 'Principal',
+                            label: t('chartPrincipal'),
                             data: [],
                             backgroundColor: '#2563eb',
                             borderColor: '#1d4ed8',
                             borderWidth: 1
                         },
                         {
-                            label: 'Interest',
+                            label: t('chartInterest'),
                             data: [],
                             backgroundColor: '#f59e0b',
                             borderColor: '#d97706',
@@ -599,13 +768,13 @@
                     scales: {
                         x: {
                             stacked: true,
-                            title: { display: true, text: 'Year', color: textColor },
+                            title: { display: true, text: t('chartYear'), color: textColor },
                             ticks: { color: textColor },
                             grid: { color: gridColor }
                         },
                         y: {
                             stacked: true,
-                            title: { display: true, text: 'Amount Paid (Rp)', color: textColor },
+                            title: { display: true, text: t('chartAmountPaid'), color: textColor },
                             ticks: {
                                 color: textColor,
                                 callback: function (value) { return formatCurrency(value); }
@@ -634,7 +803,7 @@
             pieChart = new Chart(pieCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Principal', 'Interest'],
+                    labels: [t('chartPrincipal'), t('chartInterest')],
                     datasets: [{
                         data: [0, 0],
                         backgroundColor: ['#2563eb', '#f59e0b'],
@@ -668,13 +837,13 @@
         function updateChart(yearlyData, groupSize) {
             if (!amortizationChart) return;
 
-            const labelPrefix = groupSize > 12 ? 'Period ' : 'Year ';
+            const labelPrefix = groupSize > 12 ? (currentLang === 'id' ? 'Periode ' : 'Period ') : (currentLang === 'id' ? 'Tahun ' : 'Year ');
             amortizationChart.data.labels = yearlyData.map(d => labelPrefix + d.label);
             amortizationChart.data.datasets[0].data = yearlyData.map(d => d.principal);
             amortizationChart.data.datasets[1].data = yearlyData.map(d => d.interest);
 
             // Update x-axis title based on grouping
-            amortizationChart.options.scales.x.title.text = groupSize > 12 ? 'Period (2 Years)' : 'Year';
+            amortizationChart.options.scales.x.title.text = groupSize > 12 ? t('chartPeriod') : t('chartYear');
             amortizationChart.update();
         }
 
@@ -688,7 +857,10 @@
         exportCSVBtn.addEventListener('click', () => {
             if (currentSchedule.length === 0) return;
 
-            const headers = ['Payment #', 'Beginning Balance', 'Interest', 'Principal', 'Total Payment', 'Ending Balance'];
+            const headers = currentLang === 'id'
+                ? ['Pembayaran #', 'Saldo Awal', 'Bunga', 'Pokok', 'Total Pembayaran', 'Sisa Saldo']
+                : ['Payment #', 'Beginning Balance', 'Interest', 'Principal', 'Total Payment', 'Ending Balance'];
+
             const rows = currentSchedule.map(p => [
                 p.paymentNumber,
                 p.beginningBalance.toFixed(2),
@@ -715,9 +887,31 @@
             URL.revokeObjectURL(url);
         });
 
+        // ===== LANGUAGE TOGGLE EVENT =====
+        document.getElementById('langToggle').addEventListener('click', (e) => {
+            const option = e.target.closest('.lang-toggle-option');
+            if (option) {
+                setLanguage(option.dataset.lang);
+            }
+        });
+
+        // Keyboard support for language toggle
+        document.getElementById('langToggle').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const option = e.target.closest('.lang-toggle-option');
+                if (option) {
+                    setLanguage(option.dataset.lang);
+                }
+            }
+        });
+
         // ===== INIT =====
         document.addEventListener('DOMContentLoaded', () => {
             initDarkMode();
+
+            // Set initial language from localStorage or default to 'id'
+            setLanguage(currentLang);
 
             const inputs = [
                 loanAmountInput, interestRateInput, loanTermInput,
