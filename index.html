@@ -160,6 +160,55 @@
             color: white;
         }
 
+        /* Input mode segmented toggle */
+        .mode-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            background: #e2e8f0;
+            border-radius: 0.6rem;
+            padding: 3px;
+        }
+
+        .dark .mode-toggle {
+            background: #334155;
+        }
+
+        .mode-toggle-option {
+            padding: 7px 8px;
+            border-radius: 0.45rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .mode-toggle-option:hover {
+            color: #334155;
+        }
+
+        .dark .mode-toggle-option {
+            color: #94a3b8;
+        }
+
+        .dark .mode-toggle-option:hover {
+            color: #e2e8f0;
+        }
+
+        .mode-toggle-option.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark .mode-toggle-option.active {
+            background: #3b82f6;
+            color: white;
+        }
+
         /* Mobile-specific improvements */
         @media (max-width: 640px) {
             .summary-card-value {
@@ -229,14 +278,21 @@
 
                 <div class="space-y-5 md:space-y-6">
                     <div>
+                        <!-- Input Mode Toggle: Loan Amount vs Installment Amount -->
+                        <p id="modeToggleTitle" class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2">Hitung Berdasarkan</p>
+                        <div class="mode-toggle no-print mb-4" id="inputModeToggle" role="radiogroup" aria-label="Input mode selector">
+                            <span class="mode-toggle-option active" data-mode="loan" role="radio" aria-checked="true" tabindex="0">Jumlah Pinjaman</span>
+                            <span class="mode-toggle-option" data-mode="installment" role="radio" aria-checked="false" tabindex="0">Angsuran Bulanan</span>
+                        </div>
+
                         <label for="loanAmount" id="labelLoanAmount" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Jumlah Pinjaman (Rp)</label>
                         <div class="flex items-center space-x-3 md:space-x-4 mt-1">
                             <input type="range" id="loanAmountRange" min="1" max="10000000000" step="1000000" value="500000000"
-                                aria-label="Loan amount slider"
+                                aria-label="Amount slider"
                                 aria-valuemin="1" aria-valuemax="10000000000"
                                 class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer">
                             <input type="number" id="loanAmount" min="1" max="10000000000" value="500000000"
-                                aria-label="Loan amount in Rupiah"
+                                aria-label="Amount in Rupiah"
                                 class="w-28 sm:w-36 p-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 rounded-md text-sm">
                         </div>
                         <p id="loanAmountHint" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Jumlah pinjaman adalah harga setelah dikurangi uang muka (DP)</p>
@@ -375,8 +431,15 @@
                 pageTitle: 'Kalkulator Amortisasi Pinjaman',
                 pageSubtitle: 'Jelajahi secara interaktif bagaimana perubahan ketentuan pinjaman memengaruhi pembayaran, total bunga, dan jadwal pelunasan Anda.',
                 paramTitle: 'Parameter Pinjaman',
+                modeToggleTitle: 'Hitung Berdasarkan',
+                modeLoan: 'Jumlah Pinjaman',
+                modeInstallment: 'Angsuran Bulanan',
                 labelLoanAmount: 'Jumlah Pinjaman (Rp)',
                 loanAmountHint: 'Jumlah pinjaman adalah harga setelah dikurangi uang muka (DP)',
+                labelInstallmentAmount: 'Angsuran Bulanan (Rp)',
+                installmentHint: 'Masukkan angsuran bulanan yang Anda inginkan — jumlah pinjaman akan dihitung otomatis',
+                labelLoanAmountResult: 'Jumlah Pinjaman (Pokok)',
+                errorInstallmentZero: '⚠️ Angsuran bulanan harus lebih dari 0.',
                 labelInterestRate: 'Suku Bunga Tahunan (%)',
                 labelLoanTerm: 'Jangka Waktu (Bulan)',
                 labelMonthlyPayment: 'Angsuran Bulanan',
@@ -409,8 +472,15 @@
                 pageTitle: 'Loan Amortization Calculator',
                 pageSubtitle: 'Interactively explore how changing your loan terms affects your payments, total interest, and payback schedule.',
                 paramTitle: 'Loan Parameters',
+                modeToggleTitle: 'Calculate Based On',
+                modeLoan: 'Loan Amount',
+                modeInstallment: 'Monthly Installment',
                 labelLoanAmount: 'Loan Amount (Rp)',
                 loanAmountHint: 'Loan amount is the price after deducting the down payment (DP)',
+                labelInstallmentAmount: 'Monthly Installment (Rp)',
+                installmentHint: 'Enter your desired monthly installment — the loan amount will be calculated automatically',
+                labelLoanAmountResult: 'Loan Amount (Principal)',
+                errorInstallmentZero: '⚠️ Monthly installment must be greater than 0.',
                 labelInterestRate: 'Annual Interest Rate (%)',
                 labelLoanTerm: 'Loan Term (Months)',
                 labelMonthlyPayment: 'Monthly Payment',
@@ -443,6 +513,15 @@
 
         let currentLang = localStorage.getItem('lang') || 'id';
 
+        // ===== INPUT MODE ('loan' = enter principal, 'installment' = enter monthly payment) =====
+        let inputMode = localStorage.getItem('inputMode') || 'loan';
+
+        // Slider/input configuration + remembered value for each mode
+        const MODE_CONFIG = {
+            loan: { min: 1, max: 10000000000, step: 1000000, value: 500000000 },
+            installment: { min: 100000, max: 200000000, step: 100000, value: 10000000 }
+        };
+
         function t(key) {
             return translations[currentLang][key] || translations['id'][key] || key;
         }
@@ -457,13 +536,22 @@
 
             // Parameters
             document.getElementById('paramTitle').textContent = t('paramTitle');
-            document.getElementById('labelLoanAmount').textContent = t('labelLoanAmount');
-            document.getElementById('loanAmountHint').textContent = t('loanAmountHint');
             document.getElementById('labelInterestRate').textContent = t('labelInterestRate');
             document.getElementById('labelLoanTerm').textContent = t('labelLoanTerm');
 
-            // Summary cards
-            document.getElementById('labelMonthlyPayment').textContent = t('labelMonthlyPayment');
+            // Input mode toggle
+            document.getElementById('modeToggleTitle').textContent = t('modeToggleTitle');
+            document.querySelector('.mode-toggle-option[data-mode="loan"]').textContent = t('modeLoan');
+            document.querySelector('.mode-toggle-option[data-mode="installment"]').textContent = t('modeInstallment');
+
+            // Mode-dependent labels (amount input + first summary card)
+            const isInstallmentMode = inputMode === 'installment';
+            document.getElementById('labelLoanAmount').textContent =
+                isInstallmentMode ? t('labelInstallmentAmount') : t('labelLoanAmount');
+            document.getElementById('loanAmountHint').textContent =
+                isInstallmentMode ? t('installmentHint') : t('loanAmountHint');
+            document.getElementById('labelMonthlyPayment').textContent =
+                isInstallmentMode ? t('labelLoanAmountResult') : t('labelMonthlyPayment');
             document.getElementById('labelTotalInterest').textContent = t('labelTotalInterest');
             document.getElementById('labelTotalPaid').textContent = t('labelTotalPaid');
 
@@ -595,12 +683,12 @@
         }
 
         function validateInputs() {
-            const principal = parseFloat(loanAmountInput.value);
+            const amount = parseFloat(loanAmountInput.value);
             const rate = parseFloat(interestRateInput.value);
             const months = parseInt(loanTermInput.value);
 
-            if (isNaN(principal) || principal <= 0) {
-                showError(t('errorAmountZero'));
+            if (isNaN(amount) || amount <= 0) {
+                showError(inputMode === 'installment' ? t('errorInstallmentZero') : t('errorAmountZero'));
                 return null;
             }
             if (isNaN(rate) || rate < 0) {
@@ -621,7 +709,7 @@
             }
 
             hideError();
-            return { principal, rate, months };
+            return { amount, rate, months };
         }
 
         // Input event listeners with sync
@@ -642,6 +730,7 @@
         }
 
         // ===== PMT CALCULATION =====
+        // Monthly payment from principal
         function calculatePMT(rate, nper, pv) {
             if (rate === 0) {
                 return pv / nper;
@@ -649,22 +738,39 @@
             return (pv * rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
         }
 
+        // Principal from monthly payment (present value of an annuity)
+        function calculatePV(rate, nper, pmt) {
+            if (rate === 0) {
+                return pmt * nper;
+            }
+            return pmt * (1 - Math.pow(1 + rate, -nper)) / rate;
+        }
+
         // ===== MAIN CALCULATOR =====
         function updateCalculator() {
             const inputs = validateInputs();
             if (!inputs) return;
 
-            const { principal, rate, months } = inputs;
+            const { amount, rate, months } = inputs;
             const annualInterestRate = rate / 100;
             const monthlyInterestRate = annualInterestRate / 12;
             const numberOfPayments = months;
 
-            const monthlyPayment = calculatePMT(monthlyInterestRate, numberOfPayments, principal);
+            // Derive whichever value wasn't entered, based on the active input mode
+            let principal, monthlyPayment;
+            if (inputMode === 'installment') {
+                monthlyPayment = amount;
+                principal = calculatePV(monthlyInterestRate, numberOfPayments, monthlyPayment);
+            } else {
+                principal = amount;
+                monthlyPayment = calculatePMT(monthlyInterestRate, numberOfPayments, principal);
+            }
+
             const totalPaid = monthlyPayment * numberOfPayments;
             const totalInterest = totalPaid - principal;
 
-            // Update summary
-            monthlyPaymentEl.textContent = formatCurrency(monthlyPayment);
+            // First summary card shows the derived value for the active mode
+            monthlyPaymentEl.textContent = formatCurrency(inputMode === 'installment' ? principal : monthlyPayment);
             totalInterestEl.textContent = formatCurrency(totalInterest);
             totalPaidEl.textContent = formatCurrency(totalPaid);
 
@@ -887,6 +993,51 @@
             URL.revokeObjectURL(url);
         });
 
+        // ===== INPUT MODE TOGGLE =====
+        function setInputMode(mode, isInit) {
+            // Remember the current value for the mode we're leaving
+            if (!isInit && mode !== inputMode) {
+                MODE_CONFIG[inputMode].value = parseFloat(loanAmountInput.value) || MODE_CONFIG[inputMode].value;
+            }
+
+            inputMode = mode;
+            localStorage.setItem('inputMode', mode);
+
+            // Update toggle UI
+            document.querySelectorAll('.mode-toggle-option').forEach(el => {
+                const isActive = el.dataset.mode === mode;
+                el.classList.toggle('active', isActive);
+                el.setAttribute('aria-checked', isActive);
+            });
+
+            // Re-scale the amount slider + number input for the active mode
+            const cfg = MODE_CONFIG[mode];
+            [loanAmountInput, loanAmountRange].forEach(el => {
+                el.min = cfg.min;
+                el.max = cfg.max;
+                el.value = cfg.value;
+            });
+            loanAmountRange.step = cfg.step;
+            loanAmountRange.setAttribute('aria-valuemin', cfg.min);
+            loanAmountRange.setAttribute('aria-valuemax', cfg.max);
+
+            applyTranslations();
+            updateCalculator();
+        }
+
+        document.getElementById('inputModeToggle').addEventListener('click', (e) => {
+            const option = e.target.closest('.mode-toggle-option');
+            if (option) setInputMode(option.dataset.mode);
+        });
+
+        document.getElementById('inputModeToggle').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const option = e.target.closest('.mode-toggle-option');
+                if (option) setInputMode(option.dataset.mode);
+            }
+        });
+
         // ===== LANGUAGE TOGGLE EVENT =====
         document.getElementById('langToggle').addEventListener('click', (e) => {
             const option = e.target.closest('.lang-toggle-option');
@@ -922,7 +1073,9 @@
             inputs.forEach(input => input.addEventListener('input', debouncedUpdate));
 
             initializeCharts();
-            updateCalculator();
+
+            // Apply saved input mode (also runs updateCalculator)
+            setInputMode(inputMode, true);
 
             // Sticky footer ad close button
             const closeFooterAd = document.getElementById('closeFooterAd');
