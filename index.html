@@ -46,10 +46,6 @@
     }
     </script>
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4134152065560989"
-         crossorigin="anonymous"></script>
-
     <!-- Google Fonts - must be before Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -243,6 +239,14 @@
 
     <div class="container mx-auto p-3 sm:p-4 md:p-8 max-w-7xl">
 
+        <nav aria-label="Main navigation" class="no-print mb-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs font-medium text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:text-sm">
+            <a href="https://amirmuntaha.github.io/" class="hover:text-blue-600 dark:hover:text-blue-400">Beranda / Home</a>
+            <a href="https://amirmuntaha.github.io/#guides" class="hover:text-blue-600 dark:hover:text-blue-400">Panduan / Guides</a>
+            <a href="https://amirmuntaha.github.io/about/" class="hover:text-blue-600 dark:hover:text-blue-400">Tentang / About</a>
+            <a href="https://amirmuntaha.github.io/privacy/" class="hover:text-blue-600 dark:hover:text-blue-400">Privasi / Privacy</a>
+            <a href="https://amirmuntaha.github.io/contact/" class="hover:text-blue-600 dark:hover:text-blue-400">Kontak / Contact</a>
+        </nav>
+
         <header class="text-center mb-6 md:mb-8">
             <div class="flex justify-between items-center mb-4 no-print">
                 <!-- Language Toggle -->
@@ -259,13 +263,6 @@
             <h1 id="pageTitle" class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Kalkulator Amortisasi Pinjaman</h1>
             <p id="pageSubtitle" class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Jelajahi secara interaktif bagaimana perubahan ketentuan pinjaman memengaruhi pembayaran, total bunga, dan jadwal pelunasan Anda.</p>
         </header>
-
-        <!-- ====== AD SLOT #1: Header Banner (728x90 or Responsive) ====== -->
-        <div class="ad-slot no-print mb-4 md:mb-6 text-center">
-            <div class="mx-auto max-w-3xl bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 md:p-4 text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
-                📢 Ad Space — Header Banner (728×90 or Responsive)
-            </div>
-        </div>
 
         <!-- Error message area -->
         <div id="errorMessage" role="alert" aria-live="assertive" class="hidden mb-4 md:mb-6 p-3 md:p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-400 text-center text-sm font-medium"></div>
@@ -353,13 +350,6 @@
                     </div>
                 </div>
 
-                <!-- AD SLOT #2 -->
-                <div class="ad-slot no-print">
-                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 md:p-4 text-center text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
-                        📢 Ad Space — In-Feed Native Ad (Responsive)
-                    </div>
-                </div>
-
                 <!-- Bar chart -->
                 <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
                     <h2 id="barChartTitle" class="text-lg md:text-xl font-bold mb-2 md:mb-4 text-slate-900 dark:text-white">Pokok vs. Bunga per Tahun</h2>
@@ -399,28 +389,18 @@
                     </div>
                 </div>
 
-                <!-- AD SLOT #3 -->
-                <div class="ad-slot no-print">
-                    <div class="bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 md:p-4 text-center text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
-                        📢 Ad Space — Rectangle (300×250 or Responsive)
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- AD SLOT #4: Sticky Footer -->
-        <div id="stickyFooterAd" class="ad-slot no-print fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
-            <div class="container mx-auto px-3 md:px-4 py-2 text-center relative">
-                <button id="closeFooterAd" aria-label="Close footer ad" class="absolute top-1 right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg font-bold">&times;</button>
-                <div class="text-slate-400 dark:text-slate-500 text-xs sm:text-sm py-1">
-                    📢 Ad Space — Sticky Footer (Anchor Ad)
-                </div>
-            </div>
-        </div>
-
-        <footer class="text-center mt-10 md:mt-12 mb-16 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            <p>Built with ❤️ — <a href="https://github.com/amirmuntaha/loan_calculator" class="underline hover:text-blue-600 dark:hover:text-blue-400">View on GitHub</a></p>
-            <p class="mt-1 text-xs">Note: This uses Tailwind CSS CDN for prototyping. For production, use the <a href="https://tailwindcss.com/docs/installation" class="underline">Tailwind CLI</a> to generate optimized CSS.</p>
+        <footer class="text-center mt-10 md:mt-12 mb-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            <nav aria-label="Footer navigation" class="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-3">
+                <a href="https://amirmuntaha.github.io/" class="underline hover:text-blue-600 dark:hover:text-blue-400">Beranda</a>
+                <a href="https://amirmuntaha.github.io/about/" class="underline hover:text-blue-600 dark:hover:text-blue-400">Tentang</a>
+                <a href="https://amirmuntaha.github.io/privacy/" class="underline hover:text-blue-600 dark:hover:text-blue-400">Privasi</a>
+                <a href="https://amirmuntaha.github.io/contact/" class="underline hover:text-blue-600 dark:hover:text-blue-400">Kontak</a>
+                <a href="https://github.com/amirmuntaha/loan_calculator" class="underline hover:text-blue-600 dark:hover:text-blue-400">Kode sumber</a>
+            </nav>
+            <p>Hasil kalkulator adalah estimasi edukatif, bukan penawaran kredit atau nasihat keuangan.</p>
         </footer>
     </div>
 
@@ -1078,14 +1058,6 @@
             setInputMode(inputMode, true);
 
             // Sticky footer ad close button
-            const closeFooterAd = document.getElementById('closeFooterAd');
-            const stickyFooterAd = document.getElementById('stickyFooterAd');
-            if (closeFooterAd && stickyFooterAd) {
-                closeFooterAd.addEventListener('click', () => {
-                    stickyFooterAd.style.display = 'none';
-                    document.body.style.paddingBottom = '0';
-                });
-            }
         });
     </script>
 </body>
