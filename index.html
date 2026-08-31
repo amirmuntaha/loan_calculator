@@ -116,44 +116,39 @@
             background: #60a5fa;
         }
 
-        /* Language toggle styles */
-        .lang-toggle {
-            position: relative;
+        /* Language button styles */
+        .lang-btn {
             display: inline-flex;
             align-items: center;
-            background: #e2e8f0;
-            border-radius: 9999px;
-            padding: 3px;
-            cursor: pointer;
-        }
-
-        .dark .lang-toggle {
-            background: #334155;
-        }
-
-        .lang-toggle-option {
-            padding: 4px 12px;
-            border-radius: 9999px;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 0.5rem;
             font-size: 0.75rem;
             font-weight: 600;
-            transition: all 0.2s ease;
+            cursor: pointer;
             user-select: none;
-            color: #64748b;
+            transition: all 0.15s ease;
+            background: #e2e8f0;
+            color: #334155;
+            border: none;
         }
 
-        .lang-toggle-option.active {
-            background: #2563eb;
-            color: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        .lang-btn:hover {
+            background: #cbd5e1;
         }
 
-        .dark .lang-toggle-option {
-            color: #94a3b8;
+        .dark .lang-btn {
+            background: #334155;
+            color: #e2e8f0;
         }
 
-        .dark .lang-toggle-option.active {
-            background: #3b82f6;
-            color: white;
+        .dark .lang-btn:hover {
+            background: #475569;
+        }
+
+        .lang-btn .lang-icon {
+            font-size: 1rem;
+            line-height: 1;
         }
 
         /* Input mode segmented toggle */
@@ -249,11 +244,11 @@
 
         <header class="text-center mb-6 md:mb-8">
             <div class="flex justify-between items-center mb-4 no-print">
-                <!-- Language Toggle -->
-                <div class="lang-toggle" id="langToggle" role="radiogroup" aria-label="Language selector">
-                    <span class="lang-toggle-option active" data-lang="id" role="radio" aria-checked="true" tabindex="0">ID</span>
-                    <span class="lang-toggle-option" data-lang="en" role="radio" aria-checked="false" tabindex="0">EN</span>
-                </div>
+                <!-- Language Toggle (shows only the current language; click to switch) -->
+                <button type="button" class="lang-btn" id="langToggle" aria-label="Switch language">
+                    <span class="lang-icon" aria-hidden="true">🌐</span>
+                    <span id="langLabel">ID</span>
+                </button>
                 <!-- Dark Mode Toggle -->
                 <button id="darkModeToggle" aria-label="Toggle dark mode"
                     class="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
@@ -571,12 +566,17 @@
             currentLang = lang;
             localStorage.setItem('lang', lang);
 
-            // Update toggle UI
-            document.querySelectorAll('.lang-toggle-option').forEach(el => {
-                const isActive = el.dataset.lang === lang;
-                el.classList.toggle('active', isActive);
-                el.setAttribute('aria-checked', isActive);
-            });
+            // Show only the currently selected language on the button
+            const langLabel = document.getElementById('langLabel');
+            const langToggle = document.getElementById('langToggle');
+            if (langLabel) {
+                langLabel.textContent = lang.toUpperCase();
+            }
+            if (langToggle) {
+                const other = lang === 'id' ? 'English' : 'Bahasa Indonesia';
+                langToggle.setAttribute('aria-label', 'Switch language to ' + other);
+                langToggle.title = 'Switch to ' + other;
+            }
 
             applyTranslations();
         }
@@ -1019,22 +1019,8 @@
         });
 
         // ===== LANGUAGE TOGGLE EVENT =====
-        document.getElementById('langToggle').addEventListener('click', (e) => {
-            const option = e.target.closest('.lang-toggle-option');
-            if (option) {
-                setLanguage(option.dataset.lang);
-            }
-        });
-
-        // Keyboard support for language toggle
-        document.getElementById('langToggle').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                const option = e.target.closest('.lang-toggle-option');
-                if (option) {
-                    setLanguage(option.dataset.lang);
-                }
-            }
+        document.getElementById('langToggle').addEventListener('click', () => {
+            setLanguage(currentLang === 'id' ? 'en' : 'id');
         });
 
         // ===== INIT =====
